@@ -86,6 +86,13 @@ public class CommandInteractionImpl extends InteractionImpl implements CommandIn
     {
         EntityBuilder entityBuilder = jda.getEntityBuilder();
 
+        resolveJson.optObject("attachments").ifPresent(attachments ->
+            attachments.keys().forEach(id -> {
+                DataObject json = attachments.getObject(id);
+                Message.Attachment file = entityBuilder.createMessageAttachment(json);
+                resolved.put(file.getIdLong(), file);
+            })
+        );
         resolveJson.optObject("users").ifPresent(users ->
             users.keys().forEach(userId -> {
                 DataObject userJson = users.getObject(userId);
