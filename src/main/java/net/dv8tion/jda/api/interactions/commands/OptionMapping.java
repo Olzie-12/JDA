@@ -121,6 +121,7 @@ public class OptionMapping
             case ROLE:
             case USER:
             case INTEGER:
+            case ATTACHMENT:
                 return data.getLong("value");
         }
     }
