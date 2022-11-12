@@ -124,6 +124,16 @@ public class OptionMapping
                 return data.getLong("value");
         }
     }
+    
+    @Nonnull
+    public Message.Attachment getAsAttachment() {
+        Object obj = this.resolved.get(this.getAsLong());
+        if (obj instanceof Message.Attachment) {
+            return (Message.Attachment)obj;
+        } else {
+            throw new IllegalStateException("Cannot resolve option of type " + this.type + " to Attachment!");
+        }
+    }
 
     /**
      * The double value for this option.
