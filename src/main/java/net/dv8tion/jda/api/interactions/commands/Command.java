@@ -549,7 +549,7 @@ public class Command implements ISnowflake
     {
         private final String name, description;
         private final int type;
-        private final boolean required;
+        private final boolean required, autoComplete;
         private final Set<ChannelType> channelTypes;
         private final List<Choice> choices;
         private Number minValue;
@@ -561,6 +561,7 @@ public class Command implements ISnowflake
             this.description = json.getString("description");
             this.type = json.getInt("type");
             this.required = json.getBoolean("required");
+            this.autoComplete = json.getBoolean("autocomplete");
             this.channelTypes = Collections.unmodifiableSet(json.optArray("channel_types")
                     .map(it -> it.stream(DataArray::getInt).map(ChannelType::fromId).collect(Collectors.toSet()))
                     .orElse(Collections.emptySet()));
@@ -613,6 +614,16 @@ public class Command implements ISnowflake
         public boolean isRequired()
         {
             return required;
+        }
+        
+        /**
+         * Whether this option supports auto-complete
+         *
+         * @return True if this option supports auto-complete
+         */
+        public boolean isAutoComplete()
+        {
+            return autoComplete;
         }
 
         /**
