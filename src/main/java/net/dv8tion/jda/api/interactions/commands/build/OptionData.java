@@ -617,6 +617,8 @@ public class OptionData implements SerializableData
         Checks.check(value >= MIN_NEGATIVE_NUMBER, "Double value may not be lower than %f", MIN_NEGATIVE_NUMBER);
         Checks.check(value <= MAX_POSITIVE_NUMBER, "Double value may not be larger than %f", MAX_POSITIVE_NUMBER);
         Checks.check(choices.size() < MAX_CHOICES, "Cannot have more than 25 choices for an option!");
+         if (isAutoComplete)
+            throw new IllegalStateException("Cannot add choices to auto-complete options");
         if (type != OptionType.NUMBER)
             throw new IllegalArgumentException("Cannot add double choice for OptionType." + type);
         choices.put(name, value);
@@ -648,6 +650,8 @@ public class OptionData implements SerializableData
         Checks.notEmpty(name, "Name");
         Checks.notLonger(name, MAX_CHOICE_NAME_LENGTH, "Name");
         Checks.check(choices.size() < MAX_CHOICES, "Cannot have more than 25 choices for an option!");
+        if (isAutoComplete)
+            throw new IllegalStateException("Cannot add choices to auto-complete options");
         if (type != OptionType.INTEGER)
             throw new IllegalArgumentException("Cannot add int choice for OptionType." + type);
         choices.put(name, value);
@@ -682,6 +686,8 @@ public class OptionData implements SerializableData
         Checks.check(value >= MIN_NEGATIVE_NUMBER, "Long value may not be lower than %f", MIN_NEGATIVE_NUMBER);
         Checks.check(value <= MAX_POSITIVE_NUMBER, "Long value may not be larger than %f", MAX_POSITIVE_NUMBER);
         Checks.check(choices.size() < MAX_CHOICES, "Cannot have more than 25 choices for an option!");
+        if (isAutoComplete)
+            throw new IllegalStateException("Cannot add choices to auto-complete options");
         if (type != OptionType.INTEGER)
             throw new IllegalArgumentException("Cannot add long choice for OptionType." + type);
         choices.put(name, value);
@@ -716,6 +722,8 @@ public class OptionData implements SerializableData
         Checks.notLonger(name, MAX_CHOICE_NAME_LENGTH, "Name");
         Checks.notLonger(value, MAX_CHOICE_VALUE_LENGTH, "Value");
         Checks.check(choices.size() < MAX_CHOICES, "Cannot have more than 25 choices for an option!");
+        if (isAutoComplete)
+            throw new IllegalStateException("Cannot add choices to auto-complete options");
         if (type != OptionType.STRING)
             throw new IllegalArgumentException("Cannot add string choice for OptionType." + type);
         choices.put(name, value);
@@ -747,6 +755,8 @@ public class OptionData implements SerializableData
             throw new IllegalStateException("Cannot add choices for an option of type " + type);
         Checks.noneNull(choices, "Choices");
         Checks.check(choices.length + this.choices.size() <= MAX_CHOICES, "Cannot have more than 25 choices for one option!");
+        if (isAutoComplete)
+            throw new IllegalStateException("Cannot add choices to auto-complete options");
         for (Command.Choice choice : choices)
         {
             if (type == OptionType.INTEGER)
