@@ -240,6 +240,17 @@ public class OptionData implements SerializableData
     {
         return isRequired;
     }
+    
+    /**
+     * Whether this option supports auto-complete interactions
+     * via {@link CommandAutoCompleteInteractionEvent}.
+     *
+     * @return True, if this option supports auto-complete
+     */
+    public boolean isAutoComplete()
+    {
+        return isAutoComplete;
+    }
 
     /**
      * The {@link ChannelType ChannelTypes} this option is restricted to.
