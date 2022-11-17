@@ -84,14 +84,14 @@ public class AutoCompleteCallbackActionImpl extends InteractionCallbackActionImp
     }
 
     @Override
-    protected DataObject toData()
-    {
+    protected DataObject toData() {
         DataObject data = DataObject.empty();
         DataArray array = DataArray.empty();
+        DataObject payload = DataObject.empty();
         choices.forEach(choice -> array.add(choice.toData(type)));
-        data.put("choices", array);
+        payload.put("choices", array);
         data.put("type", ResponseType.COMMAND_AUTOCOMPLETE_CHOICES.getRaw());
-        data.put("data", data);
+        data.put("data", payload);
         return data;
     }
 
