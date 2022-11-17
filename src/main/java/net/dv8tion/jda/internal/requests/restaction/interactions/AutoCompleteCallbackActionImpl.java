@@ -90,6 +90,8 @@ public class AutoCompleteCallbackActionImpl extends InteractionCallbackActionImp
         DataArray array = DataArray.empty();
         choices.forEach(choice -> array.add(choice.toData(type)));
         data.put("choices", array);
+        data.put("type", ResponseType.COMMAND_AUTOCOMPLETE_CHOICES.getRaw());
+        data.put("data", data);
         return data;
     }
 

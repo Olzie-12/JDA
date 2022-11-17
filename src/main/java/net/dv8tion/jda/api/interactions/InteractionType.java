@@ -57,6 +57,8 @@ public enum InteractionType
             return SLASH_COMMAND;
         case 3:
             return COMPONENT;
+        case 4:
+            return COMMAND_AUTOCOMPLETE;
         default:
             return UNKNOWN;
         }
