@@ -796,6 +796,7 @@ public class OptionData implements SerializableData
                 .put("description", description);
         if (type != OptionType.SUB_COMMAND && type != OptionType.SUB_COMMAND_GROUP)
             json.put("required", isRequired);
+            json.put("autocomplete", isAutoComplete);
         if (choices != null && !choices.isEmpty())
         {
             json.put("choices", DataArray.fromCollection(choices.entrySet()
@@ -837,6 +838,7 @@ public class OptionData implements SerializableData
         OptionType type = OptionType.fromKey(json.getInt("type"));
         OptionData option = new OptionData(type, name, description);
         option.setRequired(json.getBoolean("required"));
+        option.setAutoComplete(json.getBoolean("autocomplete"));
         if (type == OptionType.INTEGER || type == OptionType.NUMBER)
         {
             if (!json.isNull("min_value"))
