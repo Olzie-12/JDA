@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CommandAutoCompleteInteractionEvent extends GenericInteractionCreateEvent implements CommandInteraction
+public class CommandAutoCompleteInteractionEvent extends GenericAutoCompleteInteractionEvent implements CommandInteraction
 {
     private final CommandInteractionImpl commandInteraction;
 
