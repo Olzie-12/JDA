@@ -163,39 +163,6 @@ public class OptionData implements SerializableData
     }
 
     /**
-     * Create an option builder.
-     *
-     * @param  type
-     *         The {@link OptionType}
-     * @param  name
-     *         The option name, up to {@value #MAX_NAME_LENGTH} alphanumeric (with dash) lowercase characters, as
-     *         defined by {@link #MAX_NAME_LENGTH}
-     * @param  description
-     *         The option description, up to {@value #MAX_DESCRIPTION_LENGTH} characters, as defined by {@link #MAX_DESCRIPTION_LENGTH}
-     * @param  isRequired
-     *         {@code True}, if this option is required
-     *
-     * @throws IllegalArgumentException
-     *         If any of the following checks fail
-     *         <ul>
-     *             <li>{@code type} is not null</li>
-     *             <li>{@code name} is alphanumeric (with dash), lowercase and between 1 and {@value #MAX_NAME_LENGTH} characters long</li>
-     *             <li>{@code description} is between 1 and {@value #MAX_DESCRIPTION_LENGTH} characters long</li>
-     *         </ul>
-     */
-    public OptionData(@Nonnull OptionType type, @Nonnull String name, @Nonnull String description, boolean isRequired)
-    {
-        Checks.notNull(type, "Type");
-        this.type = type;
-
-        setName(name);
-        setDescription(description);
-        setRequired(isRequired);
-        if (type.canSupportChoices())
-            choices = new LinkedHashMap<>();
-    }
-
-    /**
      * The {@link OptionType} for this option
      *
      * @return The {@link OptionType}
