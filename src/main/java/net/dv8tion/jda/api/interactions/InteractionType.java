@@ -30,6 +30,7 @@ public enum InteractionType
     PING(1),
     SLASH_COMMAND(2),
     COMPONENT(3),
+    COMMAND_AUTOCOMPLETE(4),
     ;
 
     private final int key;

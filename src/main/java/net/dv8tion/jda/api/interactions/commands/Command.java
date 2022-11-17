@@ -384,6 +384,7 @@ public class Command implements ISnowflake
         private long intValue = 0;
         private double doubleValue = Double.NaN;
         private String stringValue = null;
+        private OptionType type;
 
         /**
          * Create a Choice tuple
@@ -499,6 +500,17 @@ public class Command implements ISnowflake
             return stringValue;
         }
 
+        /**
+         * The {@link OptionType} this choice is for
+         *
+         * @return The option type of this choice
+         */
+        @Nonnull
+        public OptionType getType()
+        {
+            return type;
+        }
+
         @Override
         public int hashCode()
         {
@@ -525,6 +537,7 @@ public class Command implements ISnowflake
             this.doubleValue = value;
             this.intValue = value;
             this.stringValue = Long.toString(value);
+            this.type = OptionType.INTEGER;
         }
 
         private void setDoubleValue(double value)
@@ -532,6 +545,7 @@ public class Command implements ISnowflake
             this.doubleValue = value;
             this.intValue = (long) value;
             this.stringValue = Double.toString(value);
+            this.type = OptionType.NUMBER;
         }
 
         private void setStringValue(@Nonnull String value)
@@ -539,6 +553,25 @@ public class Command implements ISnowflake
             this.doubleValue = Double.NaN;
             this.intValue = 0;
             this.stringValue = value;
+            this.type = OptionType.STRING;
+        }
+
+        @Nonnull
+        public DataObject toData(OptionType optionType)
+        {
+            final Object value;
+            if (optionType == OptionType.INTEGER)
+                value = getAsLong();
+            else if (optionType == OptionType.STRING)
+                value = getAsString();
+            else if (optionType == OptionType.NUMBER)
+                value = getAsDouble();
+            else
+                throw new IllegalArgumentException("Cannot transform choice into data for type " + optionType);
+
+            return DataObject.empty()
+                    .put("name", name)
+                    .put("value", value);
         }
     }
 
