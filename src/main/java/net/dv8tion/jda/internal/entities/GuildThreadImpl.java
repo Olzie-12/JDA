@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.GuildThread;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import org.jetbrains.annotations.NotNull;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -59,7 +58,7 @@ public class GuildThreadImpl extends AbstractChannelImpl<GuildThread, GuildThrea
     @Override
     public List<Member> getMembers()
     {
-        throw new NotImplementedException();
+        return null;
     }
 
     @Override
@@ -102,14 +101,14 @@ public class GuildThreadImpl extends AbstractChannelImpl<GuildThread, GuildThrea
     public List<GuildThreadMember> getThreadMembers()
     {
         //TODO | Implement
-        throw new NotImplementedException();
+        return null;
     }
 
     @Override
     public GuildThreadMember getThreadMemberById(long id)
     {
         //TODO | Implement
-        throw new NotImplementedException();
+        return null;
     }
 
     @Override
