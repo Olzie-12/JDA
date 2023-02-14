@@ -51,6 +51,11 @@ public enum ChannelType
      * A {@link StageChannel StageChannel}, Guild-Only.
      */
     STAGE(13, 1, true),
+     * TODO docs | https://discord.com/developers/docs/resources/channel#channel-object-channel-types
+     */
+    GUILD_NEWS_THREAD(10, -1,true), //TODO confirm handling of sort bucket.
+    GUILD_PUBLIC_THREAD(11, -1, true),
+    GUILD_PRIVATE_THREAD(12, -1, true),
     /**
      * Unknown Discord channel type. Should never happen and would only possibly happen if Discord implemented a new
      * channel type and JDA had yet to implement support for it.
