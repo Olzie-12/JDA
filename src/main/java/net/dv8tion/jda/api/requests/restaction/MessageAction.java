@@ -329,7 +329,7 @@ public interface MessageAction extends RestAction<Message>, Appendable, AllowedM
     }
 
     /**
-     * Whether to mention the used, when replying to a message.
+     * Whether to mention the user when replying to a message.
      * <br>This only matters in combination with {@link #reference(Message)} and {@link #referenceById(long)}!
      *
      * <p>This is true by default but can be configured using {@link #setDefaultMentionRepliedUser(boolean)}!
@@ -873,9 +873,11 @@ public interface MessageAction extends RestAction<Message>, Appendable, AllowedM
      *         The components for this action row
      *
      * @throws IllegalArgumentException
-     *         If anything is null, empty, or more than 5 components are provided
+     *         If anything is null, empty, or an invalid number of components are provided
      *
      * @return Updated MessageAction for chaining convenience
+     *
+     * @see    ActionRow#of(Collection)
      */
     @Nonnull
     @CheckReturnValue
@@ -892,9 +894,11 @@ public interface MessageAction extends RestAction<Message>, Appendable, AllowedM
      *         The components for this action row
      *
      * @throws IllegalArgumentException
-     *         If anything is null, empty, or more than 5 components are provided
+     *         If anything is null, empty, or an invalid number of components are provided
      *
      * @return Updated MessageAction for chaining convenience
+     *
+     * @see    ActionRow#of(Component...)
      */
     @Nonnull
     @CheckReturnValue

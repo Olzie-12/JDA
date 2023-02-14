@@ -121,7 +121,41 @@ public class OptionMapping
             case ROLE:
             case USER:
             case INTEGER:
+            case ATTACHMENT:
                 return data.getLong("value");
+        }
+    }
+    
+    @Nonnull
+    public Message.Attachment getAsAttachment() {
+        Object obj = this.resolved.get(this.getAsLong());
+        if (obj instanceof Message.Attachment) {
+            return (Message.Attachment)obj;
+        } else {
+            throw new IllegalStateException("Cannot resolve option of type " + this.type + " to Attachment!");
+        }
+    }
+
+    /**
+     * The double value for this option.
+     * 
+     * @throws IllegalStateException
+     *         If this option {@link #getType() type} cannot be converted to a double
+     * @throws NumberFormatException
+     *         If this option is of type {@link OptionType#STRING STRING} and could not be parsed to a valid double value
+     * 
+     * @return The double value
+     */
+    public double getAsDouble()
+    {
+        switch (type)
+        {
+            default:
+                throw new IllegalStateException("Cannot convert option of type " + type + " to double");
+            case STRING:
+            case INTEGER:
+            case NUMBER:
+                return data.getDouble("value");
         }
     }
 

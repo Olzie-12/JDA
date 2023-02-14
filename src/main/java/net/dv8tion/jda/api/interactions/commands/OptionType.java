@@ -34,7 +34,8 @@ public enum OptionType
     CHANNEL(7),
     ROLE(8),
     MENTIONABLE(9),
-    ;
+    NUMBER(10, true),
+    ATTACHMENT(11);
 
     private final int raw;
     private final boolean supportsChoices;

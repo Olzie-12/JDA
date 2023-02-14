@@ -85,6 +85,7 @@ public class GuildImpl implements Guild
     private final CacheView.SimpleCacheView<MemberPresenceImpl> memberPresences;
 
     private GuildManager manager;
+    private CompletableFuture<Void> pendingRequestToSpeak;
 
     private Member owner;
     private String name;
@@ -105,6 +106,7 @@ public class GuildImpl implements Guild
     private NotificationLevel defaultNotificationLevel = NotificationLevel.UNKNOWN;
     private MFALevel mfaLevel = MFALevel.UNKNOWN;
     private ExplicitContentLevel explicitContentLevel = ExplicitContentLevel.UNKNOWN;
+    private NSFWLevel nsfwLevel = NSFWLevel.UNKNOWN;
     private Timeout afkTimeout;
     private BoostTier boostTier = BoostTier.NONE;
     private Locale preferredLocale = Locale.ENGLISH;
@@ -889,6 +891,36 @@ public class GuildImpl implements Guild
 
     @Nonnull
     @Override
+    public synchronized Task<Void> requestToSpeak()
+    {
+        if (!isRequestToSpeakPending())
+            pendingRequestToSpeak = new CompletableFuture<>();
+
+        Task<Void> task = new GatewayTask<>(pendingRequestToSpeak, this::cancelRequestToSpeak);
+        updateRequestToSpeak();
+        return task;
+    }
+
+    @Nonnull
+    @Override
+    public synchronized Task<Void> cancelRequestToSpeak()
+    {
+        if (isRequestToSpeakPending())
+        {
+            pendingRequestToSpeak.cancel(false);
+            pendingRequestToSpeak = null;
+        }
+
+        VoiceChannel channel = getSelfMember().getVoiceState().getChannel();
+        StageInstance instance = channel instanceof StageChannel ? ((StageChannel) channel).getStageInstance() : null;
+        if (instance == null)
+            return new GatewayTask<>(CompletableFuture.completedFuture(null), () -> {});
+        CompletableFuture<Void> future = instance.cancelRequestToSpeak().submit();
+        return new GatewayTask<>(future, () -> future.cancel(false));
+    }
+
+    @Nonnull
+    @Override
     public JDAImpl getJDA()
     {
         return api;
@@ -1076,8 +1108,9 @@ public class GuildImpl implements Guild
                 result.complete(collect);
         });
 
-        result.exceptionally(ex -> {
+        handle.exceptionally(ex -> {
             WebSocketClient.LOG.error("Encountered exception trying to handle member chunk response", ex);
+            result.completeExceptionally(ex);
             return null;
         });
 
@@ -1102,8 +1135,9 @@ public class GuildImpl implements Guild
                 result.complete(collect);
         });
 
-        result.exceptionally(ex -> {
+        handle.exceptionally(ex -> {
             WebSocketClient.LOG.error("Encountered exception trying to handle member chunk response", ex);
+            result.completeExceptionally(ex);
             return null;
         });
 
@@ -1124,7 +1158,6 @@ public class GuildImpl implements Guild
             throw new InsufficientPermissionException(this, Permission.MANAGE_SERVER);
 
         final Route.CompiledRoute route = Route.Invites.GET_GUILD_INVITES.compile(getId());
-
         return new RestActionImpl<>(getJDA(), route, (response, request) ->
         {
             EntityBuilder entityBuilder = api.getEntityBuilder();
@@ -1244,7 +1277,7 @@ public class GuildImpl implements Guild
 
             Route.CompiledRoute route;
             if (member.equals(getSelfMember()))
-                route = Route.Guilds.MODIFY_SELF_NICK.compile(getId());
+                route = Route.Guilds.MODIFY_SELF.compile(getId());
             else
                 route = Route.Guilds.MODIFY_MEMBER.compile(getId(), member.getUser().getId());
 
@@ -1406,7 +1439,7 @@ public class GuildImpl implements Guild
         {
             if (voiceState.getChannel() == null)
                 throw new IllegalStateException("Can only mute members who are currently in a voice channel");
-            if (voiceState.isGuildMuted() == mute)
+            if (voiceState.isGuildMuted() == mute && (mute || !voiceState.isSuppressed()))
                 return new CompletedRestAction<>(getJDA(), null);
         }
 
@@ -1552,7 +1585,6 @@ public class GuildImpl implements Guild
 
         Checks.notBlank(name, "Name");
         name = name.trim();
-        Checks.notEmpty(name, "Name");
         Checks.notLonger(name, 100, "Name");
         return new ChannelActionImpl<>(TextChannel.class, name, this, ChannelType.TEXT).setParent(parent);
     }
@@ -1574,9 +1606,29 @@ public class GuildImpl implements Guild
 
         Checks.notBlank(name, "Name");
         name = name.trim();
-        Checks.notEmpty(name, "Name");
         Checks.notLonger(name, 100, "Name");
         return new ChannelActionImpl<>(VoiceChannel.class, name, this, ChannelType.VOICE).setParent(parent);
+    }
+
+    @Nonnull
+    @Override
+    public ChannelAction<StageChannel> createStageChannel(@Nonnull String name, Category parent)
+    {
+        if (parent != null)
+        {
+            Checks.check(parent.getGuild().equals(this), "Category is not from the same guild!");
+            if (!getSelfMember().hasPermission(parent, Permission.MANAGE_CHANNEL))
+                throw new InsufficientPermissionException(parent, Permission.MANAGE_CHANNEL);
+        }
+        else
+        {
+            checkPermission(Permission.MANAGE_CHANNEL);
+        }
+
+        Checks.notBlank(name, "Name");
+        name = name.trim();
+        Checks.notLonger(name, 100, "Name");
+        return new ChannelActionImpl<>(StageChannel.class, name, this, ChannelType.STAGE).setParent(parent);
     }
 
     @Nonnull
@@ -1604,7 +1656,7 @@ public class GuildImpl implements Guild
     public AuditableRestAction<Emote> createEmote(@Nonnull String name, @Nonnull Icon icon, @Nonnull Role... roles)
     {
         checkPermission(Permission.MANAGE_EMOTES);
-        Checks.notBlank(name, "Emote name");
+        Checks.inRange(name, 2, 32, "Emote name");
         Checks.notNull(icon, "Emote icon");
         Checks.notNull(roles, "Roles");
 
@@ -1702,6 +1754,29 @@ public class GuildImpl implements Guild
             checkPosition(role);
             Checks.check(!role.isManaged(), "Cannot %s a managed role %s a Member. Role: %s", type, preposition, role.toString());
         });
+    }
+
+    private synchronized boolean isRequestToSpeakPending()
+    {
+        return pendingRequestToSpeak != null && !pendingRequestToSpeak.isDone();
+    }
+
+    public synchronized void updateRequestToSpeak()
+    {
+        if (!isRequestToSpeakPending())
+            return;
+        VoiceChannel connectedChannel = getSelfMember().getVoiceState().getChannel();
+        if (!(connectedChannel instanceof StageChannel))
+            return;
+        StageChannel stage = (StageChannel) connectedChannel;
+        StageInstance instance = stage.getStageInstance();
+        if (instance == null)
+            return;
+
+        CompletableFuture<Void> future = pendingRequestToSpeak;
+        pendingRequestToSpeak = null;
+
+        instance.requestToSpeak().queue((v) -> future.complete(null), future::completeExceptionally);
     }
 
     // ---- Setters -----
@@ -1871,6 +1946,12 @@ public class GuildImpl implements Guild
         return this;
     }
 
+    public GuildImpl setNSFWLevel(NSFWLevel nsfwLevel)
+    {
+        this.nsfwLevel = nsfwLevel;
+        return this;
+    }
+
     // -- Map getters --
 
     public SortedSnowflakeCacheViewImpl<Category> getCategoriesView()
@@ -1908,6 +1989,13 @@ public class GuildImpl implements Guild
     public MemberCacheViewImpl getMembersView()
     {
         return memberCache;
+    }
+
+    @Nonnull
+    @Override
+    public NSFWLevel getNSFWLevel()
+    {
+        return nsfwLevel;
     }
 
     @Nullable

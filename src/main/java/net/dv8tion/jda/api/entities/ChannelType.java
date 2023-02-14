@@ -48,6 +48,9 @@ public enum ChannelType
      */
     STORE(6, 0, true),
     /**
+     * A {@link StageChannel StageChannel}, Guild-Only.
+     */
+    STAGE(13, 1, true),
      * TODO docs | https://discord.com/developers/docs/resources/channel#channel-object-channel-types
      */
     GUILD_NEWS_THREAD(10, -1,true), //TODO confirm handling of sort bucket.
@@ -103,6 +106,42 @@ public enum ChannelType
     public boolean isGuild()
     {
         return isGuild;
+    }
+
+    /**
+     * Whether channels of this type support audio connections.
+     *
+     * @return True, if channels of this type support audio
+     */
+    public boolean isAudio()
+    {
+        switch (this)
+        {
+            case VOICE:
+            case STAGE:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Whether channels of this type support message sending.
+     *
+     * @return True, if channels of this type support messages
+     */
+    public boolean isMessage()
+    {
+        switch (this)
+        {
+            //case NEWS: TODO
+            case TEXT:
+            case PRIVATE:
+            case GROUP:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**

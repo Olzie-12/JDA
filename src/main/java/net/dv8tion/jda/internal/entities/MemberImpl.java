@@ -31,16 +31,13 @@ import net.dv8tion.jda.internal.utils.PermissionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MemberImpl implements Member
 {
-    private static final ZoneOffset OFFSET = ZoneOffset.of("+00:00");
     private final JDAImpl api;
     private final Set<Role> roles = ConcurrentHashMap.newKeySet();
     private final GuildVoiceState voiceState;
@@ -48,6 +45,7 @@ public class MemberImpl implements Member
     private GuildImpl guild;
     private User user;
     private String nickname;
+    private String avatarId;
     private long joinDate, boostDate;
     private boolean pending = false;
 
@@ -100,7 +98,7 @@ public class MemberImpl implements Member
     public OffsetDateTime getTimeJoined()
     {
         if (hasTimeJoined())
-            return OffsetDateTime.ofInstant(Instant.ofEpochMilli(joinDate), OFFSET);
+            return Helpers.toOffset(joinDate);
         return getGuild().getTimeCreated();
     }
 
@@ -114,7 +112,7 @@ public class MemberImpl implements Member
     @Override
     public OffsetDateTime getTimeBoosted()
     {
-        return boostDate != 0 ? OffsetDateTime.ofInstant(Instant.ofEpochMilli(boostDate), OFFSET) : null;
+        return boostDate != 0 ? Helpers.toOffset(boostDate) : null;
     }
 
     @Override
@@ -163,6 +161,12 @@ public class MemberImpl implements Member
     public String getNickname()
     {
         return nickname;
+    }
+
+    @Override
+    public String getAvatarId()
+    {
+        return avatarId;
     }
 
     @Nonnull
@@ -349,6 +353,12 @@ public class MemberImpl implements Member
     public MemberImpl setNickname(String nickname)
     {
         this.nickname = nickname;
+        return this;
+    }
+
+    public MemberImpl setAvatarId(String avatarId)
+    {
+        this.avatarId = avatarId;
         return this;
     }
 

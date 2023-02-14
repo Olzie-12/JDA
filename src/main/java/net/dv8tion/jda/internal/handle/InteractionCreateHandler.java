@@ -16,15 +16,12 @@
 
 package net.dv8tion.jda.internal.handle;
 
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.*;
 import net.dv8tion.jda.api.interactions.InteractionType;
+import net.dv8tion.jda.api.interactions.components.Component;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.internal.JDAImpl;
-import net.dv8tion.jda.internal.interactions.ButtonInteractionImpl;
-import net.dv8tion.jda.internal.interactions.CommandInteractionImpl;
-import net.dv8tion.jda.internal.interactions.InteractionImpl;
+import net.dv8tion.jda.internal.interactions.*;
 import net.dv8tion.jda.internal.requests.WebSocketClient;
 
 public class InteractionCreateHandler extends SocketHandler
@@ -52,15 +49,19 @@ public class InteractionCreateHandler extends SocketHandler
 
         switch (InteractionType.fromKey(type))
         {
-            case SLASH_COMMAND: // slash commands
-                handleCommand(content);
-                break;
-            case COMPONENT: // buttons/components
-                handleAction(content);
-            default:
-                api.handleEvent(
+        case SLASH_COMMAND: // slash commands
+            handleCommand(content);
+            break;
+        case COMMAND_AUTOCOMPLETE:
+            api.handleEvent(new CommandAutoCompleteInteractionEvent(api, responseNumber, new CommandAutoCompleteInteractionImpl(api, content)));
+            break;
+        case COMPONENT: // buttons/components
+            handleAction(content);
+            break;
+        default:
+            api.handleEvent(
                     new GenericInteractionCreateEvent(api, responseNumber,
-                        new InteractionImpl(api, content)));
+                            new InteractionImpl(api, content)));
         }
 
         return null;
@@ -69,16 +70,24 @@ public class InteractionCreateHandler extends SocketHandler
     private void handleCommand(DataObject content)
     {
         api.handleEvent(
-            new SlashCommandEvent(api, responseNumber,
-                new CommandInteractionImpl(api, content)));
+                new SlashCommandEvent(api, responseNumber,
+                        new CommandInteractionImpl(api, content)));
     }
 
     private void handleAction(DataObject content)
     {
-        if (content.getObject("data").getInt("component_type") != 2)
-            return;
-        api.handleEvent(
-            new ButtonClickEvent(api, responseNumber,
-                new ButtonInteractionImpl(api, content)));
+        switch (Component.Type.fromKey(content.getObject("data").getInt("component_type")))
+        {
+        case BUTTON:
+            api.handleEvent(
+                    new ButtonClickEvent(api, responseNumber,
+                            new ButtonInteractionImpl(api, content)));
+            break;
+        case SELECTION_MENU:
+            api.handleEvent(
+                    new SelectionMenuEvent(api, responseNumber,
+                            new SelectionMenuInteractionImpl(api, content)));
+            break;
+        }
     }
 }

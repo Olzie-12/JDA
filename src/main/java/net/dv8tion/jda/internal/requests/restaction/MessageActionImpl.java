@@ -171,7 +171,7 @@ public class MessageActionImpl extends RestActionImpl<Message> implements Messag
             return this;
         final List<MessageEmbed> embeds = message.getEmbeds();
         if (embeds != null && !embeds.isEmpty())
-            setEmbeds(embeds.stream().filter(e -> e.getType() == EmbedType.RICH).collect(Collectors.toList()));
+            setEmbeds(embeds.stream().filter(e -> e != null && e.getType() == EmbedType.RICH).collect(Collectors.toList()));
         files.clear();
 
         components = new ArrayList<>();
@@ -284,7 +284,7 @@ public class MessageActionImpl extends RestActionImpl<Message> implements Messag
     public MessageActionImpl append(final CharSequence csq, final int start, final int end)
     {
         if (content.length() + end - start > Message.MAX_CONTENT_LENGTH)
-            throw new IllegalArgumentException("A message may not exceed 2000 characters. Please limit your input!");
+            throw new IllegalArgumentException("A message may not exceed " + Message.MAX_CONTENT_LENGTH + " characters. Please limit your input!");
         content.append(csq, start, end);
         return this;
     }
@@ -295,7 +295,7 @@ public class MessageActionImpl extends RestActionImpl<Message> implements Messag
     public MessageActionImpl append(final char c)
     {
         if (content.length() == Message.MAX_CONTENT_LENGTH)
-            throw new IllegalArgumentException("A message may not exceed 2000 characters. Please limit your input!");
+            throw new IllegalArgumentException("A message may not exceed " + Message.MAX_CONTENT_LENGTH + " characters. Please limit your input!");
         content.append(c);
         return this;
     }
@@ -522,7 +522,7 @@ public class MessageActionImpl extends RestActionImpl<Message> implements Messag
         if (override)
         {
             if (embeds == null)
-                obj.putNull("embeds");
+                obj.put("embeds", DataArray.empty());
             else
                 obj.put("embeds", DataArray.fromCollection(embeds));
             if (content.length() == 0)
@@ -534,7 +534,7 @@ public class MessageActionImpl extends RestActionImpl<Message> implements Messag
             else
                 obj.put("nonce", nonce);
             if (components == null)
-                obj.putNull("components");
+                obj.put("components", DataArray.empty());
             else
                 obj.put("components", DataArray.fromCollection(components));
             if (retainedAttachments != null)
@@ -612,6 +612,8 @@ public class MessageActionImpl extends RestActionImpl<Message> implements Messag
             return asMultipart();
         else if (!isEmpty())
             return asJSON();
+        else if (embeds != null && !embeds.isEmpty() && channel instanceof GuildChannel)
+            throw new InsufficientPermissionException((GuildChannel) channel, Permission.MESSAGE_EMBED_LINKS, "Cannot send message with only embeds without Permission.MESSAGE_EMBED_LINKS!");
         throw new IllegalStateException("Cannot build a message without content!");
     }
 

@@ -66,10 +66,16 @@ public class MessageEmbed implements SerializableData
     public static final int VALUE_MAX_LENGTH = 1024;
 
     /**
-     * The maximum length the description and footer of an embed can have
+     * The maximum length the description of an embed can have
+     *
+     * @see net.dv8tion.jda.api.EmbedBuilder#setDescription(CharSequence) EmbedBuilder.setDescription(text)
+     */
+    public static final int DESCRIPTION_MAX_LENGTH = 4096;
+    
+    /**
+     * The maximum length the footer of an embed can have
      *
      * @see net.dv8tion.jda.api.EmbedBuilder#setFooter(String, String) EmbedBuilder.setFooter(text, iconUrl)
-     * @see net.dv8tion.jda.api.EmbedBuilder#setDescription(CharSequence) EmbedBuilder.setDescription(text)
      */
     public static final int TEXT_MAX_LENGTH = 2048;
 
@@ -337,7 +343,7 @@ public class MessageEmbed implements SerializableData
     /**
      * The total amount of characters that is displayed when this embed is displayed by the Discord client.
      *
-     * <p>An Embed can only have, at max, {@value #EMBED_MAX_LENGTH_BOT} displayable text characters.
+     * <p>The total character limit is defined by {@link #EMBED_MAX_LENGTH_BOT} as {@value #EMBED_MAX_LENGTH_BOT}.
      *
      * @return A never-negative sum of all displayed text characters.
      */
@@ -354,7 +360,7 @@ public class MessageEmbed implements SerializableData
             if (title != null)
                 length += Helpers.codePointLength(title);
             if (description != null)
-                length += Helpers.codePointLength(description);
+                length += Helpers.codePointLength(description.trim());
             if (author != null)
                 length += Helpers.codePointLength(author.getName());
             if (footer != null)
