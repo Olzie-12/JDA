@@ -17,6 +17,7 @@
 package net.dv8tion.jda.api.requests.restaction;
 
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -73,17 +74,21 @@ public interface CommandEditAction extends RestAction<Command>
     CommandEditAction apply(@Nonnull CommandData commandData);
 
     /**
-     * Whether this command is available to everyone by default.
-     * <br>If this is disabled, you need to explicitly whitelist users and roles per guild.
+     * Sets the {@link net.dv8tion.jda.api.Permission Permissions} that a user must have in a specific channel to be able to use this command.
+     * <br>By default, everyone can use this command ({@link DefaultMemberPermissions#ENABLED}). Additionally, a command can be disabled for everyone but admins via {@link DefaultMemberPermissions#DISABLED}.
+     * <p>These configurations can be overwritten by moderators in each guild. See {@link Command#retrievePrivileges(net.dv8tion.jda.api.entities.Guild)} to get moderator defined overrides.
      *
-     * @param  enabled
-     *         True, if this command is enabled by default for everyone. (Default: true)
+     * @param  permission
+     *         {@link DefaultMemberPermissions} representing the default permissions of this command.
      *
      * @return The CommandEditAction instance, for chaining
+     *
+     * @see DefaultMemberPermissions#ENABLED
+     * @see DefaultMemberPermissions#DISABLED
      */
     @Nonnull
     @CheckReturnValue
-    CommandEditAction setDefaultEnabled(boolean enabled);
+    CommandEditAction setDefaultPermissions(@Nonnull DefaultMemberPermissions permission);
 
     /**
      * Configure the name

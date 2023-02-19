@@ -17,6 +17,7 @@ package net.dv8tion.jda.internal.requests.restaction;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -30,6 +31,7 @@ import net.dv8tion.jda.internal.requests.RestActionImpl;
 import net.dv8tion.jda.internal.requests.Route;
 import net.dv8tion.jda.internal.utils.Checks;
 import okhttp3.RequestBody;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;
@@ -75,11 +77,12 @@ public class CommandCreateActionImpl extends RestActionImpl<Command> implements 
         return (CommandCreateAction) super.deadline(timestamp);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public CommandCreateAction setDefaultEnabled(boolean enabled)
+    public CommandCreateAction setDefaultPermissions(@NotNull DefaultMemberPermissions permission)
     {
-        data.setDefaultEnabled(enabled);
+        Checks.notNull(permission, "Default Member Permissions");
+        data.setDefaultPermissions(permission);
         return this;
     }
 

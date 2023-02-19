@@ -19,6 +19,7 @@ package net.dv8tion.jda.internal.requests.restaction;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -43,6 +44,7 @@ public class CommandEditActionImpl extends RestActionImpl<Command> implements Co
     private static final int NAME_SET        = 1 << 0;
     private static final int DESCRIPTION_SET = 1 << 1;
     private static final int OPTIONS_SET     = 1 << 2;
+    private static final int PERMISSIONS_SET = 1 << 3;
     private final Guild guild;
     private int mask = 0;
     private CommandData data = new CommandData(UNDEFINED, UNDEFINED);
@@ -85,9 +87,10 @@ public class CommandEditActionImpl extends RestActionImpl<Command> implements Co
 
     @Nonnull
     @Override
-    public CommandEditAction setDefaultEnabled(boolean enabled)
+    public CommandEditAction setDefaultPermissions(@Nonnull DefaultMemberPermissions permission)
     {
-        data.setDefaultEnabled(enabled);
+        data.setDefaultPermissions(permission);
+        mask |= PERMISSIONS_SET;
         return this;
     }
 
@@ -184,6 +187,8 @@ public class CommandEditActionImpl extends RestActionImpl<Command> implements Co
             json.remove("description");
         if (isUnchanged(OPTIONS_SET))
             json.remove("options");
+        if (isUnchanged(PERMISSIONS_SET))
+            json.remove("default_member_permissions");
         mask = 0;
         data = new CommandData(UNDEFINED, UNDEFINED);
         return getRequestBody(json);

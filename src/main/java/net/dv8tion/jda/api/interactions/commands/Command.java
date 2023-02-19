@@ -65,7 +65,7 @@ public class Command implements ISnowflake
     private final List<SubcommandGroup> groups;
     private final List<Subcommand> subcommands;
     private final long id, guildId, applicationId, version;
-    private final boolean defaultEnabled;
+    private final DefaultMemberPermissions defaultMemberPermissions;
 
     public Command(JDAImpl api, Guild guild, DataObject json)
     {
@@ -74,7 +74,9 @@ public class Command implements ISnowflake
         this.name = json.getString("name");
         this.description = json.getString("description");
         this.id = json.getUnsignedLong("id");
-        this.defaultEnabled = json.getBoolean("default_permission");
+        this.defaultMemberPermissions = json.isNull("default_member_permissions")
+                ? DefaultMemberPermissions.ENABLED
+                : DefaultMemberPermissions.enabledFor(json.getLong("default_member_permissions"));
         this.guildId = guild != null ? guild.getIdLong() : 0L;
         this.applicationId = json.getUnsignedLong("application_id", api.getSelfUser().getApplicationIdLong());
         this.options = parseOptions(json, OPTION_TEST, Option::new);
@@ -254,16 +256,6 @@ public class Command implements ISnowflake
     }
 
     /**
-     * Whether this command is enabled for everyone by default.
-     *
-     * @return True, if everyone can use this command by default.
-     */
-    public boolean isDefaultEnabled()
-    {
-        return defaultEnabled;
-    }
-
-    /**
      * The {@link Option Options} of this command.
      *
      * @return Immutable list of command options
@@ -342,6 +334,17 @@ public class Command implements ISnowflake
     public OffsetDateTime getTimeModified()
     {
         return TimeUtil.getTimeCreated(getVersion());
+    }
+
+    /**
+     * The {@link DefaultMemberPermissions} of this command.
+     * <br>If this command has no default permission set, this returns {@link DefaultMemberPermissions#ENABLED}.
+     *
+     * @return The DefaultMemberPermissions of this command.
+     */
+    @Nonnull
+    public DefaultMemberPermissions getDefaultPermissions() {
+        return defaultMemberPermissions;
     }
 
     @Override

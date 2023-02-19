@@ -16,6 +16,7 @@
 
 package net.dv8tion.jda.api.interactions.commands.build;
 
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.utils.data.DataArray;
 import net.dv8tion.jda.api.utils.data.DataObject;
@@ -35,8 +36,8 @@ public class CommandData extends BaseCommand<CommandData> implements Serializabl
     private boolean allowSubcommands = true;
     private boolean allowGroups = true;
     private boolean allowOption = true;
-    private boolean defaultPermissions = true; // whether the command uses default_permissions (blacklist/whitelist)
     private boolean allowRequired = true;
+    private DefaultMemberPermissions defaultMemberPermissions = DefaultMemberPermissions.ENABLED;
 
     /**
      * Create an command builder.
@@ -62,7 +63,7 @@ public class CommandData extends BaseCommand<CommandData> implements Serializabl
     @Override
     public DataObject toData()
     {
-        return super.toData().put("default_permission", defaultPermissions);
+        return super.toData().put("default_member_permissions", defaultMemberPermissions == DefaultMemberPermissions.ENABLED ? null : Long.toUnsignedString(defaultMemberPermissions.getPermissionsRaw()));
     }
 
     /**
@@ -102,19 +103,37 @@ public class CommandData extends BaseCommand<CommandData> implements Serializabl
     }
 
     /**
-     * Whether this command is available to everyone by default.
-     * <br>If this is disabled, you need to explicitly whitelist users and roles per guild.
+     * Sets the {@link net.dv8tion.jda.api.Permission Permissions} that a user must have in a specific channel to be able to use this command.
+     * <br>By default, everyone can use this command ({@link DefaultMemberPermissions#ENABLED}). Additionally, a command can be disabled for everyone but admins via {@link DefaultMemberPermissions#DISABLED}.
+     * <p>These configurations can be overwritten by moderators in each guild. See {@link net.dv8tion.jda.api.interactions.commands.Command#retrievePrivileges(net.dv8tion.jda.api.entities.Guild)} to get moderator defined overrides.
      *
-     * @param  enabled
-     *         True, if this command is enabled by default for everyone. (Default: true)
+     * @param  permission
+     *         {@link DefaultMemberPermissions} representing the default permissions of this command.
      *
-     * @return The CommandData instance, for chaining
+     * @return The builder instance, for chaining
+     *
+     * @see DefaultMemberPermissions#ENABLED
+     * @see DefaultMemberPermissions#DISABLED
      */
     @Nonnull
-    public CommandData setDefaultEnabled(boolean enabled)
-    {
-        this.defaultPermissions = enabled;
+    public CommandData setDefaultPermissions(@Nonnull DefaultMemberPermissions permission) {
+        Checks.notNull(permission, "DefaultMemberPermissions");
+        this.defaultMemberPermissions = permission;
         return this;
+    }
+
+    /**
+     * Gets the {@link DefaultMemberPermissions} of this command.
+     * <br>If no permissions have been set, this returns {@link DefaultMemberPermissions#ENABLED}.
+     *
+     * @return DefaultMemberPermissions of this command.
+     *
+     * @see    DefaultMemberPermissions#ENABLED
+     * @see    DefaultMemberPermissions#DISABLED
+     */
+    @Nonnull
+    public DefaultMemberPermissions getDefaultPermissions() {
+        return defaultMemberPermissions;
     }
 
     /**
@@ -351,6 +370,11 @@ public class CommandData extends BaseCommand<CommandData> implements Serializabl
         String description = object.getString("description");
         DataArray options = object.optArray("options").orElseGet(DataArray::empty);
         CommandData command = new CommandData(name, description);
+        command.setDefaultPermissions(
+                object.isNull("default_member_permissions")
+                        ? DefaultMemberPermissions.ENABLED
+                        : DefaultMemberPermissions.enabledFor(object.getLong("default_member_permissions"))
+        );
         options.stream(DataArray::getObject).forEach(opt ->
         {
             OptionType type = OptionType.fromKey(opt.getInt("type"));
