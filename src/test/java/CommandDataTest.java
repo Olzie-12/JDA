@@ -15,6 +15,7 @@
  */
 
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -34,7 +35,7 @@ public class CommandDataTest
     public void testNormal()
     {
         CommandData command = new CommandData("ban", "Ban a user from this server")
-                .setDefaultEnabled(false)
+                .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
                 .addOption(OptionType.USER, "user", "The user to ban", true) // required before non-required
                 .addOption(OptionType.STRING, "reason", "The ban reason") // test that default is false
                 .addOption(OptionType.INTEGER, "days", "The duration of the ban", false); // test with explicit false
@@ -66,7 +67,7 @@ public class CommandDataTest
     public void testSubcommand()
     {
         CommandData command = new CommandData("mod", "Moderation commands")
-                .setDefaultEnabled(true)
+                .setDefaultPermissions(DefaultMemberPermissions.DISABLED)
                 .addSubcommands(new SubcommandData("ban", "Ban a user from this server")
                     .addOption(OptionType.USER, "user", "The user to ban", true) // required before non-required
                     .addOption(OptionType.STRING, "reason", "The ban reason") // test that default is false

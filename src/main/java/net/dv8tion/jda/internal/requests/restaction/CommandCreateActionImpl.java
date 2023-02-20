@@ -81,7 +81,6 @@ public class CommandCreateActionImpl extends RestActionImpl<Command> implements 
     @Override
     public CommandCreateAction setDefaultPermissions(@NotNull DefaultMemberPermissions permission)
     {
-        Checks.notNull(permission, "Default Member Permissions");
         data.setDefaultPermissions(permission);
         return this;
     }
