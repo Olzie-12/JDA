@@ -555,7 +555,6 @@ public class DataArray implements Iterable<Object>, SerializableArray
         if (value instanceof SerializableData)
         {
             data.add(((SerializableData) value).toData().data);
-            System.out.println("SerializableData" + new String(((SerializableData) value).toData().toJson()));
         }
         else if (value instanceof SerializableArray)
             data.add(((SerializableArray) value).toDataArray().data);
