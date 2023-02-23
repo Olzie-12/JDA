@@ -30,6 +30,7 @@ import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
@@ -128,6 +129,10 @@ public interface CommandEditAction extends RestAction<Command>
     @Nonnull
     @CheckReturnValue
     CommandEditAction clearOptions();
+
+    @Nonnull
+    @CheckReturnValue
+    List<OptionData> getOptions();
 
     /**
      * Adds up to 25 options to this command.

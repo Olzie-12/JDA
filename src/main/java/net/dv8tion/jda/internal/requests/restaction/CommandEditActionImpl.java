@@ -35,6 +35,7 @@ import okhttp3.RequestBody;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 
@@ -152,6 +153,13 @@ public class CommandEditActionImpl extends RestActionImpl<Command> implements Co
         data.addOptions(options);
         mask |= OPTIONS_SET;
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public List<OptionData> getOptions()
+    {
+        return data.getOptions();
     }
 
     @Nonnull
