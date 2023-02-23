@@ -588,6 +588,12 @@ public class OptionData implements SerializableData
         return this;
     }
 
+    public OptionData clearChoices()
+    {
+        this.choices.clear();
+        return this;
+    }
+
     /**
      * Add a predefined choice for this option.
      * <br>The user can only provide one of the choices and cannot specify any other value.
