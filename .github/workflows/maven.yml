@@ -17,6 +17,6 @@ jobs:
         with:
           local-dir: apis/
           server: ${{secrets.FTP_IP_BOTS}}
-          server-dir: runtime/apis/
+          server-dir: ${{secrets.FTP_PATH_BOTS}}
           username: ${{secrets.FTP_USERNAME_BOTS}}
           password: ${{secrets.FTP_PASSWORD_BOTS}}
