@@ -248,7 +248,7 @@ build.apply {
     dependsOn(minimalJar)
 
     jar.mustRunAfter(clean)
-    j//avadocJar.mustRunAfter(jar)
+    //javadocJar.mustRunAfter(jar)
     //sourcesJar.mustRunAfter(javadocJar)
     //shadowJar.mustRunAfter(sourcesJar)
 }
