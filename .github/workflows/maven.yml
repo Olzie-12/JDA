@@ -11,7 +11,7 @@ jobs:
           java-version: 8
           distribution: 'liberica'
       - name: Build with Gradle
-        run: ./gradlew clean -Pgroup=com.github.Olzie-12 -Pversion=30d9c13774 -xtest assemble publishToMavenLocal
+        run: ./gradlew compileJava -Pgroup=com.github.Olzie-12 -Pversion=30d9c13774 -xtest assemble publishToMavenLocal
       - name: Deploy to FTP
         uses: Olzie-12/FTP-Deploy-Action@4.3.2
         with:
