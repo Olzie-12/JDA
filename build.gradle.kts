@@ -241,16 +241,16 @@ javadoc.apply {
 
 build.apply {
     dependsOn(jar)
-    dependsOn(javadocJar)
-    dependsOn(sourcesJar)
-    dependsOn(shadowJar)
+    //dependsOn(javadocJar)
+    //dependsOn(sourcesJar)
+    //dependsOn(shadowJar)
     dependsOn(noOpusJar)
     dependsOn(minimalJar)
 
     jar.mustRunAfter(clean)
-    javadocJar.mustRunAfter(jar)
-    sourcesJar.mustRunAfter(javadocJar)
-    shadowJar.mustRunAfter(sourcesJar)
+    j//avadocJar.mustRunAfter(jar)
+    //sourcesJar.mustRunAfter(javadocJar)
+    //shadowJar.mustRunAfter(sourcesJar)
 }
 
 test.apply {
