@@ -11,7 +11,7 @@ jobs:
           java-version: 8
           distribution: 'liberica'
       - name: Build with Gradle
-        run: ./gradlew clean -Pgroup=com.github.Olzie-12 -Pversion=30d9c13774l
+        run: ./gradlew clean -Pgroup=com.github.Olzie-12 -Pversion=30d9c13774 -xtest assemble publishToMavenLocal
       - name: Move Jar
         run: mv build/libs/JDA.jar build/jarsjda/
       - name: Deploy to FTP
