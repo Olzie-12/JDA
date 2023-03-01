@@ -23,7 +23,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     signing
     `java-library`
-    `maven-publish`
+//    `maven-publish`
 
     id("com.github.ben-manes.versions") version "0.19.0"
     id("com.github.johnrengelman.shadow") version "5.1.0"
@@ -35,7 +35,7 @@ project.group = "net.dv8tion"
 project.version = "$versionObj"
 val archivesBaseName = "JDA"
 
-val s3PublishingUrl = "s3://m2.dv8tion.net/releases"
+//val s3PublishingUrl = "s3://m2.dv8tion.net/releases"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -259,41 +259,41 @@ test.apply {
     failFast = true
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("S3Release") {
-            from(components["java"])
+//publishing {
+//    publications {
+//        create<MavenPublication>("S3Release") {
+//            from(components["java"])
+//
+//            artifactId = archivesBaseName
+//            groupId = project.group as String
+//            version = project.version as String
+//
+//            artifact(javadocJar)
+//            artifact(sourcesJar)
+//
+//            repositories {
+//                maven {
+//                    url = uri(s3PublishingUrl)
+//                    credentials(AwsCredentials::class) {
+//                        accessKey = getProjectProperty("awsAccessKey")
+//                        secretKey = getProjectProperty("awsSecretKey")
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
-            artifactId = archivesBaseName
-            groupId = project.group as String
-            version = project.version as String
-
-            artifact(javadocJar)
-            artifact(sourcesJar)
-
-            repositories {
-                maven {
-                    url = uri(s3PublishingUrl)
-                    credentials(AwsCredentials::class) {
-                        accessKey = getProjectProperty("awsAccessKey")
-                        secretKey = getProjectProperty("awsSecretKey")
-                    }
-                }
-            }
-        }
-    }
-}
-
-val publishS3ReleasePublicationToMavenRepository: Task by tasks
-publishS3ReleasePublicationToMavenRepository.apply {
-    onlyIf { getProjectProperty("awsAccessKey").isNotEmpty() }
-    onlyIf { getProjectProperty("awsSecretKey").isNotEmpty() }
-    onlyIf { System.getenv("BUILD_NUMBER") != null }
-
-    dependsOn(clean)
-    dependsOn(build)
-    build.mustRunAfter(clean)
-}
+//val publishS3ReleasePublicationToMavenRepository: Task by tasks
+//publishS3ReleasePublicationToMavenRepository.apply {
+//    onlyIf { getProjectProperty("awsAccessKey").isNotEmpty() }
+//    onlyIf { getProjectProperty("awsSecretKey").isNotEmpty() }
+//    onlyIf { System.getenv("BUILD_NUMBER") != null }
+//
+//    dependsOn(clean)
+//    dependsOn(build)
+//    build.mustRunAfter(clean)
+//}
 
 fun getProjectProperty(propertyName: String): String {
     var property = ""
