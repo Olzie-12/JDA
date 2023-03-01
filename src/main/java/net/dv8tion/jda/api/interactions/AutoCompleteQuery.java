@@ -1,8 +1,8 @@
 package net.dv8tion.jda.api.interactions;
 
+import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

@@ -203,6 +203,7 @@ compileJava.apply {
 
 jar.apply {
     baseName = project.name
+    archiveFileName.set("${project.name}.jar")
     manifest.attributes(mapOf(
             "Implementation-Version" to version,
             "Automatic-Module-Name" to "net.dv8tion.jda"))
