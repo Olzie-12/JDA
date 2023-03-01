@@ -1,0 +1,22 @@
+name: Maven
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: 8
+          distribution: 'liberica'
+      - name: Build with Maven
+        run: ./gradlew clean -Pgroup=com.github.Olzie-12 -Pversion=30d9c13774 -xtest assemble publishToMavenLocal
+      - name: Deploy to FTP
+        uses: Olzie-12/FTP-Deploy-Action@4.3.2
+        with:
+          local-dir: apis/
+          server: ${{secrets.FTP_IP_BOTS}}
+          server-dir: runtime/apis/
+          username: ${{secrets.FTP_USERNAME_BOTS}}
+          password: ${{secrets.FTP_PASSWORD_BOTS}}
