@@ -13,7 +13,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean -x sourcesJar -x JavadocJar -Pgroup=com.github.Olzie-12 -Pversion=30d9c13774l
       - name: Move Jar
-        run: mv build/libs/JDA.jar build/jarsjda/
+        run: | 
+          mkdir build/jarsjda/
+          mv build/libs/JDA.jar build/jarsjda/
       - name: Deploy to FTP
         uses: Olzie-12/FTP-Deploy-Action@4.3.2
         with:
