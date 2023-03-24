@@ -16,9 +16,15 @@
 
 package net.dv8tion.jda.internal.utils;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.IPermissionHolder;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.exceptions.MissingAccessException;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -197,4 +203,16 @@ public class Checks
             throw new IllegalArgumentException(name + " may not be negative");
     }
 
+    // Permission checks
+
+    public static void checkAccess(IPermissionHolder issuer, GuildChannel channel)
+    {
+        if (issuer.hasAccess(channel))
+            return;
+
+        EnumSet<Permission> perms = issuer.getPermissionsExplicit(channel);
+        if (channel instanceof VoiceChannel && !perms.contains(Permission.VOICE_CONNECT))
+            throw new MissingAccessException(channel, Permission.VOICE_CONNECT);
+        throw new MissingAccessException(channel, Permission.VIEW_CHANNEL);
+    }
 }

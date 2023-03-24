@@ -29,6 +29,7 @@ import net.dv8tion.jda.api.interactions.components.ComponentLayout;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.ThreadChannelAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.ReactionPaginationAction;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 import net.dv8tion.jda.internal.JDAImpl;
@@ -2565,6 +2566,49 @@ public interface Message extends ISnowflake, Formattable
     @Nullable
     Interaction getInteraction();
 
+    /**
+     * Creates a new, public {@link ThreadChannel} spawning/starting at this {@link Message} inside the {@link IThreadContainer} this message was sent in.
+     * <br>The starting message will copy this message, and will be of type {@link MessageType#THREAD_STARTER_MESSAGE MessageType.THREAD_STARTER_MESSAGE}.
+     *
+     * <p>The resulting {@link ThreadChannel ThreadChannel} may be one of:
+     * <ul>
+     *     <li>{@link ChannelType#GUILD_PUBLIC_THREAD}</li>
+     *     <li>{@link ChannelType#GUILD_NEWS_THREAD}</li>
+     * </ul>
+     *
+     * <p>Possible {@link net.dv8tion.jda.api.requests.ErrorResponse ErrorResponses} caused by
+     * the returned {@link net.dv8tion.jda.api.requests.RestAction RestAction} include the following:
+     * <ul>
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#MISSING_PERMISSIONS MISSING_PERMISSIONS}
+     *     <br>The channel could not be created due to a permission discrepancy</li>
+     *
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#MAX_CHANNELS MAX_CHANNELS}
+     *     <br>The maximum number of channels were exceeded</li>
+     *
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#THREAD_WITH_THIS_MESSAGE_ALREADY_EXISTS}
+     *     <br>This message has already been used to create a thread</li>
+     *
+     *     <li>{@link net.dv8tion.jda.api.requests.ErrorResponse#MAX_ACTIVE_THREADS}
+     *     <br>The maximum number of active threads has been reached, and no more may be created.</li>
+     * </ul>
+     *
+     * @param  name
+     *         The name of the new ThreadChannel (up to {@value Channel#MAX_NAME_LENGTH} characters)
+     *
+     * @throws IllegalArgumentException
+     *         If the provided name is null, blank, empty, or longer than {@value Channel#MAX_NAME_LENGTH} characters
+     * @throws IllegalStateException
+     *         If the message's channel is not actually a {@link net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer}.
+     * @throws UnsupportedOperationException
+     *         If this is a forum channel.
+     *         You must use {@link net.dv8tion.jda.api.entities.channel.concrete.ForumChannel#createForumPost(String, MessageCreateData) createForumPost(...)} instead.
+     * @throws InsufficientPermissionException
+     *         If the bot does not have {@link net.dv8tion.jda.api.Permission#CREATE_PUBLIC_THREADS Permission.CREATE_PUBLIC_THREADS} in this channel
+     *
+     * @return A specific {@link ThreadChannelAction} that may be used to configure the new ThreadChannel before its creation.
+     */
+    @CheckReturnValue
+    ThreadChannelAction createThreadChannel(String name);
     /**
      * Mention constants, useful for use with {@link java.util.regex.Pattern Patterns}
      */

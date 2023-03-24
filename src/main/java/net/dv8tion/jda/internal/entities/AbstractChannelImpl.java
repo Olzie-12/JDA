@@ -38,6 +38,7 @@ import net.dv8tion.jda.internal.requests.restaction.AuditableRestActionImpl;
 import net.dv8tion.jda.internal.requests.restaction.InviteActionImpl;
 import net.dv8tion.jda.internal.requests.restaction.PermissionOverrideActionImpl;
 import net.dv8tion.jda.internal.utils.Checks;
+import net.dv8tion.jda.internal.utils.Helpers;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -256,6 +257,12 @@ public abstract class AbstractChannelImpl<T extends GuildChannel, M extends Abst
                 invites.add(entityBuilder.createInvite(array.getObject(i)));
             return Collections.unmodifiableList(invites);
         });
+    }
+
+    @Nonnull
+    public IThreadContainer asThreadContainer()
+    {
+        return Helpers.safeChannelCast(this, IThreadContainer.class);
     }
 
     @Override

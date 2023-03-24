@@ -1042,6 +1042,17 @@ public class EntityBuilder
         return channel;
     }
 
+    public ThreadChannel createThreadChannel(DataObject json, long guildId)
+    {
+        return createThreadChannel(null, json, guildId);
+    }
+
+    public ThreadChannel createThreadChannel(GuildImpl guild, DataObject json, long guildId)
+    {
+        //TODO: This is a temporary solution until we have a better way to handle threads
+        return null;
+    }
+
     public PrivateChannel createPrivateChannel(DataObject json)
     {
         final long channelId = json.getUnsignedLong("id");

@@ -51,11 +51,24 @@ public enum ChannelType
      * A {@link StageChannel StageChannel}, Guild-Only.
      */
     STAGE(13, 1, true),
+    GUILD_NEWS_THREAD(10, -1, true),
+    GUILD_PUBLIC_THREAD(11, -1, true),
+    GUILD_PRIVATE_THREAD(12, -1, true),
+
+    /**
+     * A {@link net.dv8tion.jda.api.entities.ForumChannel ForumChannel}, Guild-Only.
+     */
+    FORUM(15, 0, true),
+
     /**
      * Unknown Discord channel type. Should never happen and would only possibly happen if Discord implemented a new
      * channel type and JDA had yet to implement support for it.
      */
     UNKNOWN(-1, -2);
+    /**
+     * Unknown Discord channel type. Should never happen and would only possibly happen if Discord implemented a new
+     * channel type and JDA had yet to implement support for it.
+     */
 
     private final int sortBucket;
     private final int id;

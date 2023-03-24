@@ -29,6 +29,7 @@ import net.dv8tion.jda.api.interactions.components.ComponentLayout;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.ThreadChannelAction;
 import net.dv8tion.jda.api.requests.restaction.pagination.ReactionPaginationAction;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import net.dv8tion.jda.api.utils.MiscUtil;
@@ -342,6 +343,12 @@ public class ReceivedMessage extends AbstractMessage
     public Interaction getInteraction()
     {
         return interaction;
+    }
+
+    @Override
+    public ThreadChannelAction createThreadChannel(String name)
+    {
+        return getChannel().asThreadContainer().createThreadChannel(name, this.getIdLong());
     }
 
     @Override

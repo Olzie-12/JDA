@@ -55,9 +55,11 @@ public enum Permission
     MESSAGE_EXT_STICKER(     37, true, true, "Use External Stickers"),
     USE_SLASH_COMMANDS(      31, true, true, "Use Slash Commands"),
 
-    MANAGE_THREADS(     34, true, true, "Manage Threads"),
-    USE_PUBLIC_THREADS( 35, true, true, "Use Public Threads"),
-    USE_PRIVATE_THREADS(36, true, true, "Use Private Threads"),
+    // Thread Permissions
+    MANAGE_THREADS(          34, true, true, "Manage Threads"),
+    CREATE_PUBLIC_THREADS(   35, true, true, "Create Public Threads"),
+    CREATE_PRIVATE_THREADS(  36, true, true, "Create Private Threads"),
+    MESSAGE_SEND_IN_THREADS( 38, true, true, "Send Messages in Threads"),
 
     // Voice Permissions
     VOICE_STREAM(           9, true, true, "Video"),
@@ -111,7 +113,7 @@ public enum Permission
             = Permission.getRaw(MESSAGE_ADD_REACTION, MESSAGE_WRITE, MESSAGE_TTS, MESSAGE_MANAGE,
                                 MESSAGE_EMBED_LINKS, MESSAGE_ATTACH_FILES, MESSAGE_EXT_STICKER,
                                 MESSAGE_EXT_EMOJI, MESSAGE_HISTORY, MESSAGE_MENTION_EVERYONE,
-                                USE_SLASH_COMMANDS, MANAGE_THREADS, USE_PUBLIC_THREADS, USE_PRIVATE_THREADS);
+                                USE_SLASH_COMMANDS, MANAGE_THREADS, CREATE_PUBLIC_THREADS, CREATE_PRIVATE_THREADS);
 
     /**
      * All voice channel specific permissions which are only available in voice channel permission overrides

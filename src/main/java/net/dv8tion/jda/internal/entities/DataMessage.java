@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ComponentLayout;
+import net.dv8tion.jda.api.requests.restaction.ThreadChannelAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,6 +72,13 @@ public class DataMessage extends AbstractMessage
     public MessageType getType()
     {
         return MessageType.DEFAULT;
+    }
+
+    @Override
+    public ThreadChannelAction createThreadChannel(String name)
+    {
+        unsupported();
+        return null;
     }
 
     @Override

@@ -26,6 +26,11 @@ import javax.annotation.Nonnull;
 public interface AbstractChannel extends ISnowflake
 {
     /**
+     * The maximum length a channel name can be. ({@value #MAX_NAME_LENGTH})
+     */
+    int MAX_NAME_LENGTH = 100;
+
+    /**
      * The human readable name of this channel.
      *
      * @return The name of this channel
