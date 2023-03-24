@@ -179,12 +179,6 @@ public class PrivateChannelImpl implements PrivateChannel
         return PrivateChannel.super.sendFile(data, fileName, options);
     }
 
-    @Override
-    public IThreadContainer asThreadContainer()
-    {
-        return null;
-    }
-
     public PrivateChannelImpl setLastMessageId(long id)
     {
         this.lastMessageId = id;

@@ -259,12 +259,6 @@ public abstract class AbstractChannelImpl<T extends GuildChannel, M extends Abst
         });
     }
 
-    @Nonnull
-    public IThreadContainer asThreadContainer()
-    {
-        return Helpers.safeChannelCast(this, IThreadContainer.class);
-    }
-
     @Override
     public long getIdLong()
     {
