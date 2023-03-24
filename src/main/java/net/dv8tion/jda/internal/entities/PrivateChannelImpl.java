@@ -165,7 +165,7 @@ public class PrivateChannelImpl implements PrivateChannel
         checkBot();
         final long maxSize = getJDA().getSelfUser().getAllowedFileSize();
         Checks.check(file == null || file.length() <= maxSize,
-                    "File may not exceed the maximum file length of %d bytes!", maxSize);
+                "File may not exceed the maximum file length of %d bytes!", maxSize);
         return PrivateChannel.super.sendFile(file, fileName, options);
     }
 
@@ -177,6 +177,12 @@ public class PrivateChannelImpl implements PrivateChannel
         final long maxSize = getJDA().getSelfUser().getAllowedFileSize();
         Checks.check(data == null || data.length <= maxSize, "File is too big! Max file-size is %d bytes", maxSize);
         return PrivateChannel.super.sendFile(data, fileName, options);
+    }
+
+    @Override
+    public IThreadContainer asThreadContainer()
+    {
+        return null;
     }
 
     public PrivateChannelImpl setLastMessageId(long id)
