@@ -352,24 +352,6 @@ public class ReceivedMessage extends AbstractMessage
         return createThreadChannel(name, this.getIdLong());
     }
 
-    @Nonnull
-    private ThreadChannelAction createThreadChannel(@Nonnull String name, boolean isPrivate)
-    {
-        Checks.notNull(name, "Name");
-        name = name.trim();
-        Checks.notEmpty(name, "Name");
-        Checks.notLonger(name, 100, "Name");
-
-        Checks.checkAccess(getGuild().getSelfMember(), this.getTextChannel());
-        if (isPrivate)
-            checkPermission(Permission.CREATE_PRIVATE_THREADS);
-        else
-            checkPermission(Permission.CREATE_PUBLIC_THREADS);
-
-        ChannelType threadType = isPrivate ? ChannelType.GUILD_PRIVATE_THREAD : this.getTextChannel().getType() == ChannelType.TEXT ? ChannelType.GUILD_PUBLIC_THREAD : ChannelType.GUILD_NEWS_THREAD;
-        return new ThreadChannelActionImpl(this.getTextChannel(), name, threadType);
-    }
-
     private boolean hasPermission(Permission permission)
     {
         return getGuild().getSelfMember().hasPermission(this.getTextChannel(), permission);
