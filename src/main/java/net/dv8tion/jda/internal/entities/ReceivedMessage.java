@@ -39,6 +39,7 @@ import net.dv8tion.jda.internal.requests.CompletedRestAction;
 import net.dv8tion.jda.internal.requests.Route;
 import net.dv8tion.jda.internal.requests.restaction.AuditableRestActionImpl;
 import net.dv8tion.jda.internal.requests.restaction.MessageActionImpl;
+import net.dv8tion.jda.internal.requests.restaction.ThreadChannelActionImpl;
 import net.dv8tion.jda.internal.utils.Checks;
 import org.apache.commons.collections4.Bag;
 import org.apache.commons.collections4.CollectionUtils;
@@ -348,7 +349,56 @@ public class ReceivedMessage extends AbstractMessage
     @Override
     public ThreadChannelAction createThreadChannel(String name)
     {
-        return getChannel().asThreadContainer().createThreadChannel(name, this.getIdLong());
+        return createThreadChannel(name, this.getIdLong());
+    }
+
+    @Nonnull
+    private ThreadChannelAction createThreadChannel(@Nonnull String name, boolean isPrivate)
+    {
+        Checks.notNull(name, "Name");
+        name = name.trim();
+        Checks.notEmpty(name, "Name");
+        Checks.notLonger(name, 100, "Name");
+
+        Checks.checkAccess(getGuild().getSelfMember(), this.getTextChannel());
+        if (isPrivate)
+            checkPermission(Permission.CREATE_PRIVATE_THREADS);
+        else
+            checkPermission(Permission.CREATE_PUBLIC_THREADS);
+
+        ChannelType threadType = isPrivate ? ChannelType.GUILD_PRIVATE_THREAD : this.getTextChannel().getType() == ChannelType.TEXT ? ChannelType.GUILD_PUBLIC_THREAD : ChannelType.GUILD_NEWS_THREAD;
+        return new ThreadChannelActionImpl(this.getTextChannel(), name, threadType);
+    }
+
+    private boolean hasPermission(Permission permission)
+    {
+        return getGuild().getSelfMember().hasPermission(this.getTextChannel(), permission);
+    }
+
+    private void checkPermission(Permission permission) { checkPermission(permission, null); }
+    private void checkPermission(Permission permission, String message)
+    {
+        if (!hasPermission(permission))
+        {
+            if (message != null)
+                throw new InsufficientPermissionException(this.getTextChannel(), permission, message);
+            else
+                throw new InsufficientPermissionException(this.getTextChannel(), permission);
+        }
+    }
+
+    @Nonnull
+    private ThreadChannelAction createThreadChannel(@Nonnull String name, long messageId)
+    {
+        Checks.notNull(name, "Name");
+        name = name.trim();
+        Checks.notEmpty(name, "Name");
+        Checks.notLonger(name, 100, "Name");
+
+        Checks.checkAccess(getGuild().getSelfMember(), this.getTextChannel());
+        checkPermission(Permission.CREATE_PUBLIC_THREADS);
+
+        return new ThreadChannelActionImpl(this.getTextChannel(), name, Long.toUnsignedString(messageId));
     }
 
     @Override

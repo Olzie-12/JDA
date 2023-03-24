@@ -3566,24 +3566,4 @@ public interface MessageChannel extends AbstractChannel, Formattable
 
         MiscUtil.appendTo(formatter, width, precision, leftJustified, out);
     }
-
-    /**
-     * Casts this union to a {@link IThreadContainer}.
-     * This method exists for developer discoverability.
-     *
-     * Note: This is effectively equivalent to using the cast operator:
-     * <pre><code>
-     * //These are the same!
-     * IThreadContainer channel = union.asThreadContainer();
-     * IThreadContainer channel2 = (IThreadContainer) union;
-     * </code></pre>
-     *
-     * You can use <code>channel instanceof IThreadContainer</code> to validate whether you can call this method.
-     *
-     * @throws IllegalStateException
-     *         If the channel represented by this union is not actually a {@link IThreadContainer}.
-     *
-     * @return The channel as a {@link IThreadContainer}
-     */
-    IThreadContainer asThreadContainer();
 }
