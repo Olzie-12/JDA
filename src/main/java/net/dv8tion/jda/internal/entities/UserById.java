@@ -86,6 +86,13 @@ public class UserById implements User
         return null;
     }
 
+    @Nullable
+    @Override
+    public String getGlobalName()
+    {
+        return null;
+    }
+
     @Nonnull
     @Override
     public String getDiscriminator()
