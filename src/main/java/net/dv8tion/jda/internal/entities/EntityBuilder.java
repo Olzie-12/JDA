@@ -127,7 +127,7 @@ public class EntityBuilder
         selfUser.setVerified(self.getBoolean("verified"))
                 .setMfaEnabled(self.getBoolean("mfa_enabled"))
                 .setName(self.getString("username"))
-                .setDiscriminator(self.getString("discriminator", "0"))
+                .setDiscriminator(self.getString("discriminator", ""))
                 .setAvatarId(self.getString("avatar", null))
                 .setBot(self.getBoolean("bot"))
                 .setSystem(false);
@@ -354,7 +354,7 @@ public class EntityBuilder
         {
             // Initial creation
             userObj.setName(user.getString("username"))
-                   .setDiscriminator(user.getString("discriminator", "0"))
+                   .setDiscriminator(user.getString("discriminator", ""))
                    .setAvatarId(user.getString("avatar", null))
                    .setBot(user.getBoolean("bot"))
                    .setSystem(user.getBoolean("system"))
@@ -375,7 +375,7 @@ public class EntityBuilder
         String oldName = userObj.getName();
         String newName = user.getString("username");
         String oldDiscriminator = userObj.getDiscriminator();
-        String newDiscriminator = user.getString("discriminator", "0");
+        String newDiscriminator = user.getString("discriminator", "");
         String oldAvatar = userObj.getAvatarId();
         String newAvatar = user.getString("avatar", null);
         int oldFlags = userObj.getFlagsRaw();
