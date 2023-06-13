@@ -27,6 +27,7 @@ import net.dv8tion.jda.internal.requests.DeferredRestAction;
 import net.dv8tion.jda.internal.requests.RestActionImpl;
 import net.dv8tion.jda.internal.requests.Route;
 import net.dv8tion.jda.internal.utils.Helpers;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
@@ -40,6 +41,7 @@ public class UserImpl extends UserById implements User
 
     protected short discriminator;
     protected String name;
+    protected String globalName;
     protected String avatarId;
     protected Profile profile;
     protected long privateChannel = 0L;
@@ -59,6 +61,13 @@ public class UserImpl extends UserById implements User
     public String getName()
     {
         return name;
+    }
+
+    @Nullable
+    @Override
+    public String getGlobalName()
+    {
+        return globalName;
     }
 
     @Nonnull
@@ -102,7 +111,7 @@ public class UserImpl extends UserById implements User
     @Override
     public String getDefaultAvatarId()
     {
-        return String.valueOf(discriminator % 5);
+        return discriminator != 0 ? String.valueOf(discriminator % 5) : super.getDefaultAvatarId();
     }
 
     @Nonnull
@@ -110,7 +119,7 @@ public class UserImpl extends UserById implements User
     public String getAsTag()
     {
         String discriminator = getDiscriminator();
-        if (discriminator.isEmpty()) return getName();
+        if (discriminator.isEmpty()) return getEffectiveName();
 
         return getName() + '#' + getDiscriminator();
     }
@@ -195,6 +204,12 @@ public class UserImpl extends UserById implements User
     public UserImpl setName(String name)
     {
         this.name = name;
+        return this;
+    }
+
+    public UserImpl setGlobalName(String globalName)
+    {
+        this.globalName = globalName;
         return this;
     }
 

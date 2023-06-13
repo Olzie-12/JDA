@@ -127,6 +127,7 @@ public class EntityBuilder
         selfUser.setVerified(self.getBoolean("verified"))
                 .setMfaEnabled(self.getBoolean("mfa_enabled"))
                 .setName(self.getString("username"))
+                .setGlobalName(self.getString("global_name", null))
                 .setDiscriminator(self.getString("discriminator", ""))
                 .setAvatarId(self.getString("avatar", null))
                 .setBot(self.getBoolean("bot"))
@@ -355,6 +356,7 @@ public class EntityBuilder
             // Initial creation
             userObj.setName(user.getString("username"))
                    .setDiscriminator(user.getString("discriminator", ""))
+                   .setGlobalName(user.getString("global_name", null))
                    .setAvatarId(user.getString("avatar", null))
                    .setBot(user.getBoolean("bot"))
                    .setSystem(user.getBoolean("system"))
