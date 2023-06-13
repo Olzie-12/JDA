@@ -65,6 +65,8 @@ public class UserImpl extends UserById implements User
     @Override
     public String getDiscriminator()
     {
+        if (discriminator == 0) return "";
+
         return Helpers.format("%04d", discriminator);
     }
 
