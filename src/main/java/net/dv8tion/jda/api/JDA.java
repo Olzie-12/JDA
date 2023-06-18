@@ -876,11 +876,7 @@ public interface JDA
     default User getUserByTag(@Nonnull String tag)
     {
         Checks.notNull(tag, "Tag");
-        Matcher matcher = User.USER_TAG.matcher(tag);
-        Checks.check(matcher.matches(), "Invalid tag format!");
-        String username = matcher.group(1);
-        String discriminator = matcher.group(2);
-        return getUserByTag(username, discriminator);
+        return getUserByTag(tag, null);
     }
 
     /**
@@ -906,16 +902,13 @@ public interface JDA
      * @return The {@link net.dv8tion.jda.api.entities.User} for the discord tag or null if no user has the provided tag
      */
     @Nullable
-    default User getUserByTag(@Nonnull String username, @Nonnull String discriminator)
+    default User getUserByTag(@Nonnull String username, String discriminator)
     {
         Checks.notNull(username, "Username");
-        Checks.notNull(discriminator, "Discriminator");
-        Checks.check(discriminator.length() == 4 && Helpers.isNumeric(discriminator), "Invalid format for discriminator!");
         int codePointLength = Helpers.codePointLength(username);
         Checks.check(codePointLength >= 2 && codePointLength <= 32, "Username must be between 2 and 32 codepoints in length!");
         return getUserCache().applyStream(stream ->
-            stream.filter(it -> it.getDiscriminator().equals(discriminator))
-                  .filter(it -> it.getName().equals(username))
+            stream.filter(it -> it.getAsTag().equals(username + (discriminator == null ? "" : "#" + discriminator)))
                   .findFirst()
                   .orElse(null)
         );
