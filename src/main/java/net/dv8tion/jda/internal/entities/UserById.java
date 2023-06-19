@@ -134,6 +134,13 @@ public class UserById implements User
     }
 
     @Override
+    public String getAsTagName()
+    {
+        unsupported();
+        return null;
+    }
+
+    @Override
     public boolean hasPrivateChannel()
     {
         unsupported();

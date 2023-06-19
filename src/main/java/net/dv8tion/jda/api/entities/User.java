@@ -277,6 +277,8 @@ public interface User extends IMentionable
     @Nonnull
     String getAsTag();
 
+    String getAsTagName();
+
     /**
      * Whether or not the currently logged in user and this user have a currently open
      * {@link net.dv8tion.jda.api.entities.PrivateChannel PrivateChannel} or not.
