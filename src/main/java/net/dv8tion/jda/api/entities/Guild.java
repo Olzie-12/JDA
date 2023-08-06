@@ -1475,6 +1475,8 @@ public interface Guild extends ISnowflake
             channel = getStoreChannelById(id);
         if (channel == null)
             channel = getCategoryById(id);
+        if (channel == null)
+            channel = getForumChannelById(id);
         return channel;
     }
 
@@ -1665,6 +1667,11 @@ public interface Guild extends ISnowflake
     default Category getCategoryById(long id)
     {
         return getCategoryCache().getElementById(id);
+    }
+
+    default ForumChannel getForumChannelById(long id)
+    {
+        return getForumChannelCache().getElementById(id);
     }
 
     /**
