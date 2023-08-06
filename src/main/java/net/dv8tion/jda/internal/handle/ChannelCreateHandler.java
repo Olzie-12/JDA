@@ -59,6 +59,10 @@ public class ChannelCreateHandler extends SocketHandler
                         builder.createStoreChannel(content, guildId)));
                 break;
             }
+            case FORUM:
+            {
+                builder.createForumChannel(content, guildId);
+            }
             case TEXT:
             {
                 jda.handleEvent(

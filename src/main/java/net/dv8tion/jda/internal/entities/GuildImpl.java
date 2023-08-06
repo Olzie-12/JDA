@@ -1966,6 +1966,11 @@ public class GuildImpl implements Guild
         return categoryCache;
     }
 
+    public SortedSnowflakeCacheViewImpl<ForumChannel> getForumView()
+    {
+        return forumChannelCache;
+    }
+
     public SortedSnowflakeCacheViewImpl<StoreChannel> getStoreChannelView()
     {
         return storeChannelCache;

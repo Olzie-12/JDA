@@ -68,6 +68,7 @@ public class GuildDeleteHandler extends SocketHandler
         SnowflakeCacheViewImpl<TextChannel> textView = getJDA().getTextChannelsView();
         SnowflakeCacheViewImpl<VoiceChannel> voiceView = getJDA().getVoiceChannelsView();
         SnowflakeCacheViewImpl<Category> categoryView = getJDA().getCategoriesView();
+        SnowflakeCacheViewImpl<ForumChannel> forumView = getJDA().getForumChannelsView();
         guildView.remove(id);
         try (UnlockHook hook = storeView.writeLock())
         {
@@ -88,6 +89,11 @@ public class GuildDeleteHandler extends SocketHandler
         {
             guild.getCategoryCache()
                  .forEachUnordered(chan -> categoryView.getMap().remove(chan.getIdLong()));
+        }
+        try (UnlockHook hook = forumView.writeLock())
+        {
+            guild.getForumChannelCache()
+                 .forEachUnordered(chan -> forumView.getMap().remove(chan.getIdLong()));
         }
 
         // Clear audio connection
