@@ -1809,6 +1809,18 @@ public interface Guild extends ISnowflake
     SortedSnowflakeCacheView<StoreChannel> getStoreChannelCache();
 
     /**
+     * Sorted {@link net.dv8tion.jda.api.utils.cache.SnowflakeCacheView SnowflakeCacheView} of
+     * all cached {@link net.dv8tion.jda.api.entities.ForumChannel StoreChannels} of this Guild.
+     * <br>TextChannels are sorted according to their position.
+     *
+     * @return {@link net.dv8tion.jda.api.utils.cache.SortedSnowflakeCacheView SortedSnowflakeCacheView}
+     *
+     * @since  4.0.0
+     */
+    @Nonnull
+    SortedSnowflakeCacheView<ForumChannel> getForumChannelCache();
+
+    /**
      * Gets a {@link net.dv8tion.jda.api.entities.TextChannel TextChannel} from this guild that has the same id as the
      * one provided. This method is similar to {@link net.dv8tion.jda.api.JDA#getTextChannelById(String)}, but it only
      * checks this specific Guild for a TextChannel.
