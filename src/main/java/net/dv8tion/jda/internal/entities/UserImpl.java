@@ -124,6 +124,16 @@ public class UserImpl extends UserById implements User
         return getName() + '#' + getDiscriminator();
     }
 
+    @Nonnull
+    @Override
+    public String getAsTagName()
+    {
+        String discriminator = getDiscriminator();
+        if (discriminator.isEmpty()) return getName();
+
+        return getName() + '#' + getDiscriminator();
+    }
+
     @Override
     public boolean hasPrivateChannel()
     {
