@@ -124,6 +124,7 @@ public class CategoryImpl extends AbstractChannelImpl<Category, CategoryImpl> im
         channels.addAll(getStoreChannels());
         channels.addAll(getTextChannels());
         channels.addAll(getVoiceChannels());
+        channels.addAll(getForumChannels());
         Collections.sort(channels);
         return Collections.unmodifiableList(channels);
     }
