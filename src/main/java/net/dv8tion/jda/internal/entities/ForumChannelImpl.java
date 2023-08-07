@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ForumChannelImpl extends AbstractChannelImpl<StoreChannel, StoreChannelImpl> implements ForumChannel
+public class ForumChannelImpl extends AbstractChannelImpl<ForumChannel, ForumChannelImpl> implements ForumChannel
 {
     public ForumChannelImpl(long id, GuildImpl guild)
     {
@@ -16,7 +16,7 @@ public class ForumChannelImpl extends AbstractChannelImpl<StoreChannel, StoreCha
     }
 
     @Override
-    public StoreChannelImpl setPosition(int rawPosition)
+    public ForumChannelImpl setPosition(int rawPosition)
     {
         getGuild().getStoreChannelView().clearCachedLists();
         return super.setPosition(rawPosition);
@@ -52,7 +52,7 @@ public class ForumChannelImpl extends AbstractChannelImpl<StoreChannel, StoreCha
 
     @Nonnull
     @Override
-    public ChannelAction<StoreChannel> createCopy(@Nonnull Guild guild)
+    public ChannelAction<ForumChannel> createCopy(@Nonnull Guild guild)
     {
         throw new UnsupportedOperationException("Bots cannot create store channels");
     }
