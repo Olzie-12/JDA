@@ -973,16 +973,14 @@ public class EntityBuilder
         {
             if (guild == null)
                 guild = (GuildImpl) getJDA().getGuildById(guildId);
-            SnowflakeCacheViewImpl<ForumChannel>
-                    guildStoreView = guild.getForumView(),
-                    storeView = getJDA().getForumChannelsView();
+            SnowflakeCacheViewImpl<ForumChannel> guildForumView = guild.getForumView(), forumView = getJDA().getForumChannelsView();
             try (
-                    UnlockHook glock = guildStoreView.writeLock();
-                    UnlockHook jlock = storeView.writeLock())
+                    UnlockHook glock = guildForumView.writeLock();
+                    UnlockHook jlock = forumView.writeLock())
             {
                 channel = new ForumChannelImpl(id, guild);
-                guildStoreView.getMap().put(id, channel);
-                playbackCache = storeView.getMap().put(id, channel) == null;
+                guildForumView.getMap().put(id, channel);
+                playbackCache = forumView.getMap().put(id, channel) == null;
             }
         }
 
