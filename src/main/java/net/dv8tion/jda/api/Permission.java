@@ -15,8 +15,6 @@
  */
 package net.dv8tion.jda.api;
 
-import net.dv8tion.jda.annotations.ForRemoval;
-import net.dv8tion.jda.annotations.ReplaceWith;
 import net.dv8tion.jda.internal.utils.Checks;
 
 import javax.annotation.Nonnull;
@@ -34,16 +32,12 @@ public enum Permission
     MANAGE_CHANNEL(4, true, true, "Manage Channels"),
     MANAGE_SERVER(5, true, false, "Manage Server"),
     VIEW_AUDIT_LOGS(7, true, false, "View Audit Logs"),
-    VIEW_CHANNEL(10, true, true, "View Channel(s)"),
+    MESSAGE_READ(10, true, true, "View Channel(s)"),
     VIEW_GUILD_INSIGHTS(19, true, false, "View Server Insights"),
     MANAGE_ROLES(28, true, false, "Manage Roles"),
     MANAGE_PERMISSIONS(28, false, true, "Manage Permissions"),
     MANAGE_WEBHOOKS(29, true, true, "Manage Webhooks"),
-    @Deprecated
-    @ForRemoval(deadline = "5.0.0")
-    @ReplaceWith("MANAGE_GUILD_EXPRESSIONS")
-    MANAGE_EMOJIS_AND_STICKERS(30, true, false, "Manage Emojis and Stickers"),
-    MANAGE_GUILD_EXPRESSIONS(30, true, false, "Manage Emojis, Stickers, and Soundboards"),
+    MANAGE_EMOTES(30, true, false, "Manage Emojis, Stickers, and Soundboards"),
     MANAGE_EVENTS(33, true, true, "Manage Events"),
     VIEW_CREATOR_MONETIZATION_ANALYTICS(41, true, false, "View Creator Analytics"),
 
@@ -57,7 +51,7 @@ public enum Permission
 
     // Text Permissions
     MESSAGE_ADD_REACTION(6, true, true, "Add Reactions"),
-    MESSAGE_SEND(11, true, true, "Send Messages"),
+    MESSAGE_WRITE(11, true, true, "Send Messages"),
     MESSAGE_TTS(12, true, true, "Send TTS Messages"),
     MESSAGE_MANAGE(13, true, true, "Manage Messages"),
     MESSAGE_EMBED_LINKS(14, true, true, "Embed Links"),
@@ -124,7 +118,7 @@ public enum Permission
      * All text channel specific permissions which are only available in text channel permission overrides
      */
     public static final long ALL_TEXT_PERMISSIONS
-            = Permission.getRaw(MESSAGE_ADD_REACTION, MESSAGE_SEND, MESSAGE_TTS, MESSAGE_MANAGE,
+            = Permission.getRaw(MESSAGE_ADD_REACTION, MESSAGE_WRITE, MESSAGE_TTS, MESSAGE_MANAGE,
             MESSAGE_EMBED_LINKS, MESSAGE_ATTACH_FILES, MESSAGE_EXT_EMOJI, MESSAGE_EXT_STICKER,
             MESSAGE_HISTORY, MESSAGE_MENTION_EVERYONE, USE_APPLICATION_COMMANDS,
             MANAGE_THREADS, CREATE_PUBLIC_THREADS, CREATE_PRIVATE_THREADS, MESSAGE_SEND_IN_THREADS, MESSAGE_ATTACH_VOICE_MESSAGE);
