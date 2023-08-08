@@ -32,7 +32,10 @@ public enum Permission
     MANAGE_CHANNEL(4, true, true, "Manage Channels"),
     MANAGE_SERVER(5, true, false, "Manage Server"),
     VIEW_AUDIT_LOGS(7, true, false, "View Audit Logs"),
-    MESSAGE_READ(10, true, true, "View Channel(s)"),
+    // Applicable to all channel types
+    VIEW_CHANNEL(10, true, true, "Read Text Channels & See Voice Channels"),
+    // Text Permissions
+    MESSAGE_READ(10, true, true, "Read Messages"),
     VIEW_GUILD_INSIGHTS(19, true, false, "View Server Insights"),
     MANAGE_ROLES(28, true, false, "Manage Roles"),
     MANAGE_PERMISSIONS(28, false, true, "Manage Permissions"),
@@ -121,7 +124,7 @@ public enum Permission
             = Permission.getRaw(MESSAGE_ADD_REACTION, MESSAGE_WRITE, MESSAGE_TTS, MESSAGE_MANAGE,
             MESSAGE_EMBED_LINKS, MESSAGE_ATTACH_FILES, MESSAGE_EXT_EMOJI, MESSAGE_EXT_STICKER,
             MESSAGE_HISTORY, MESSAGE_MENTION_EVERYONE, USE_APPLICATION_COMMANDS,
-            MANAGE_THREADS, CREATE_PUBLIC_THREADS, CREATE_PRIVATE_THREADS, MESSAGE_SEND_IN_THREADS, MESSAGE_ATTACH_VOICE_MESSAGE);
+            MANAGE_THREADS, CREATE_PUBLIC_THREADS, CREATE_PRIVATE_THREADS, MESSAGE_SEND_IN_THREADS, MESSAGE_ATTACH_VOICE_MESSAGE, MESSAGE_READ);
 
     /**
      * All voice channel specific permissions which are only available in voice channel permission overrides
