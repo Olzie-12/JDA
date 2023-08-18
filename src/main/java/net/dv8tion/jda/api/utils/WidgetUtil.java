@@ -654,7 +654,8 @@ public class WidgetUtil
             @Nonnull
             public String getDefaultAvatarId()
             {
-                return String.valueOf(Integer.parseInt(getDiscriminator()) % 5);
+                int discriminator = Integer.parseInt(getDiscriminator());
+                return String.valueOf(discriminator != 0 ? discriminator % 5 : (id >> 22) % 5);
             }
 
             /**

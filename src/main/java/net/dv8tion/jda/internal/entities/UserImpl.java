@@ -111,7 +111,7 @@ public class UserImpl extends UserById implements User
     @Override
     public String getDefaultAvatarId()
     {
-        return discriminator != 0 ? String.valueOf(discriminator % 5) : super.getDefaultAvatarId();
+        return String.valueOf(discriminator != 0 ? discriminator % 5 : (id >> 22) % 6);
     }
 
     @Nonnull
