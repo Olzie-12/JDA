@@ -325,6 +325,9 @@ public class EntityBuilder
         case STORE:
             createStoreChannel(guildObj, channelData, guildObj.getIdLong());
             break;
+        case FORUM:
+            createForumChannel(guildObj, channelData, guildObj.getIdLong());
+            break;
         default:
             LOG.debug("Cannot create channel for type " + channelData.getInt("type"));
         }
@@ -949,6 +952,42 @@ public class EntityBuilder
             .setParent(json.getLong("parent_id", 0))
             .setName(json.getString("name"))
             .setPosition(json.getInt("position"));
+
+        createOverridesPass(channel, json.getArray("permission_overwrites"));
+        if (playbackCache)
+            getJDA().getEventCache().playbackCache(EventCache.Type.CHANNEL, id);
+        return channel;
+    }
+
+    public ForumChannel createForumChannel(DataObject json, long guildId)
+    {
+        return createForumChannel(null, json, guildId);
+    }
+
+    public ForumChannel createForumChannel(GuildImpl guild, DataObject json, long guildId)
+    {
+        boolean playbackCache = false;
+        final long id = json.getLong("id");
+        ForumChannelImpl channel = (ForumChannelImpl) getJDA().getForumChannelsView().get(id);
+        if (channel == null)
+        {
+            if (guild == null)
+                guild = (GuildImpl) getJDA().getGuildById(guildId);
+            SnowflakeCacheViewImpl<ForumChannel> guildForumView = guild.getForumView(), forumView = getJDA().getForumChannelsView();
+            try (
+                    UnlockHook glock = guildForumView.writeLock();
+                    UnlockHook jlock = forumView.writeLock())
+            {
+                channel = new ForumChannelImpl(id, guild);
+                guildForumView.getMap().put(id, channel);
+                playbackCache = forumView.getMap().put(id, channel) == null;
+            }
+        }
+
+        channel
+                .setParent(json.getLong("parent_id", 0))
+                .setName(json.getString("name"))
+                .setPosition(json.getInt("position"));
 
         createOverridesPass(channel, json.getArray("permission_overwrites"));
         if (playbackCache)

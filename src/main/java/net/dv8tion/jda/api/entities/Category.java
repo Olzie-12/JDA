@@ -77,6 +77,15 @@ public interface Category extends GuildChannel
     List<TextChannel> getTextChannels();
 
     /**
+     * All {@link net.dv8tion.jda.api.entities.ForumChannel TextChannels}
+     * listed for this Category
+     *
+     * @return Immutable list of all child ForumChannels
+     */
+    @Nonnull
+    List<ForumChannel> getForumChannels();
+
+    /**
      * All {@link net.dv8tion.jda.api.entities.VoiceChannel VoiceChannels}
      * listed for this Category
      *

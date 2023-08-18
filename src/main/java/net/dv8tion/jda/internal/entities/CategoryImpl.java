@@ -124,6 +124,7 @@ public class CategoryImpl extends AbstractChannelImpl<Category, CategoryImpl> im
         channels.addAll(getStoreChannels());
         channels.addAll(getTextChannels());
         channels.addAll(getVoiceChannels());
+        channels.addAll(getForumChannels());
         Collections.sort(channels);
         return Collections.unmodifiableList(channels);
     }
@@ -144,6 +145,15 @@ public class CategoryImpl extends AbstractChannelImpl<Category, CategoryImpl> im
         return Collections.unmodifiableList(getGuild().getTextChannels().stream()
                     .filter(channel -> equals(channel.getParent()))
                     .sorted().collect(Collectors.toList()));
+    }
+
+    @Nonnull
+    @Override
+    public List<ForumChannel> getForumChannels()
+    {
+        return Collections.unmodifiableList(getGuild().getForumChannelCache().stream()
+                .filter(channel -> equals(channel.getParent()))
+                .sorted().collect(Collectors.toList()));
     }
 
     @Nonnull

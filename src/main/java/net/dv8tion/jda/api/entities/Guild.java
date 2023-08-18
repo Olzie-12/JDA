@@ -1475,6 +1475,8 @@ public interface Guild extends ISnowflake
             channel = getStoreChannelById(id);
         if (channel == null)
             channel = getCategoryById(id);
+        if (channel == null)
+            channel = getForumChannelById(id);
         return channel;
     }
 
@@ -1667,6 +1669,11 @@ public interface Guild extends ISnowflake
         return getCategoryCache().getElementById(id);
     }
 
+    default ForumChannel getForumChannelById(long id)
+    {
+        return getForumChannelCache().getElementById(id);
+    }
+
     /**
      * Gets all {@link net.dv8tion.jda.api.entities.Category Categories} in this {@link net.dv8tion.jda.api.entities.Guild Guild}.
      * <br>The returned categories will be sorted according to their position.
@@ -1807,6 +1814,18 @@ public interface Guild extends ISnowflake
      */
     @Nonnull
     SortedSnowflakeCacheView<StoreChannel> getStoreChannelCache();
+
+    /**
+     * Sorted {@link net.dv8tion.jda.api.utils.cache.SnowflakeCacheView SnowflakeCacheView} of
+     * all cached {@link net.dv8tion.jda.api.entities.ForumChannel StoreChannels} of this Guild.
+     * <br>TextChannels are sorted according to their position.
+     *
+     * @return {@link net.dv8tion.jda.api.utils.cache.SortedSnowflakeCacheView SortedSnowflakeCacheView}
+     *
+     * @since  4.0.0
+     */
+    @Nonnull
+    SortedSnowflakeCacheView<ForumChannel> getForumChannelCache();
 
     /**
      * Gets a {@link net.dv8tion.jda.api.entities.TextChannel TextChannel} from this guild that has the same id as the
